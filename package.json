@@ -1,0 +1,17 @@
+{
+  "name": "nodefunfacts",
+  "version": "1.0.0",
+  "description": "hi",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "david",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "~4.17.20",
+    "typescript": "3.9.7",
+    "@types/node": "14.0.27",
+    "@types/lodash": "~4.14.159",
+    "ts-node": "8.10.2"
+  }
+}
