@@ -1,4 +1,14 @@
-import { range, fromPairs, keys, mapValues, mapKeys, reduce } from "lodash";
+import {
+    range,
+    fromPairs,
+    keys,
+    mapValues,
+    mapKeys,
+    reduce,
+    chunk,
+    flatMap,
+    flatten,
+} from "lodash";
 import { performance } from "perf_hooks";
 import { deAsyncedMap } from "./async";
 
@@ -26,7 +36,15 @@ export const runExperiment = async <Ret>({
     sampleCount: number;
     experiments: Array<[string, () => Promise<Ret>]>;
 }) => {
-    const samples = await deAsyncedMap(range(sampleCount), () => compare(experiments));
+    const chunkedSamples = chunk(range(sampleCount), 1000);
+    const samples = flatten(
+        await Promise.all(
+            flatMap(chunkedSamples, (chunkedSet) =>
+                deAsyncedMap(chunkedSet, () => compare(experiments))
+            )
+        )
+    );
+
     const formattedSamples = mapKeys(samples, (_, idx) => {
         const run = parseInt(idx as any) + 1;
         return `Run ${run}`;
