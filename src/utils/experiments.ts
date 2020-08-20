@@ -44,6 +44,15 @@ export const runExperiment = async <Ret>({
     }, totalsInitial);
     const averages = mapValues(totals, (total) => total / sampleCount);
 
-    const rows = { ...formattedSamples, Average: averages };
+    const controlName = experiments[0][0];
+    const controlAverage = averages[controlName];
+    const controlRatios = mapValues(averages, (average) => {
+        return (((controlAverage - average) / controlAverage) * 100).toFixed(1) + "%";
+    });
+
+    const rows =
+        samples.length > 20
+            ? { Average: averages, Advantage: controlRatios }
+            : { ...formattedSamples, Average: averages, Advantage: controlRatios };
     console.table(rows);
 };
