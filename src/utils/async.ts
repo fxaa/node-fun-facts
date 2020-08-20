@@ -17,7 +17,7 @@ export const deAsyncedMap = async <A, B>(
         async (acc, curr) => {
             const currentAcc = await acc;
             const callbackRes = await callback(curr);
-            return currentAcc.concat(callbackRes);
+            return [...currentAcc, callbackRes];
         },
-        Promise.resolve([]) as Promise<Array<B>>
+        Promise.resolve([] as B[])
     );

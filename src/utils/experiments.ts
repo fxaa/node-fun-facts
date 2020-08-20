@@ -9,17 +9,11 @@ export const timed = async <Ret>(func: () => Promise<Ret>) => {
 };
 
 export const compare = async <Ret>(experiments: Array<[string, () => Promise<Ret>]>) => {
-    const resultsPromise = reduce(
+    const results = await deAsyncedMap(
         experiments,
-        async (acc, [name, func]) => {
-            const currentAcc = await acc;
-            const timedRes = await timed(func);
-            return [...currentAcc, [name, timedRes]] as [string, number][];
-        },
-        Promise.resolve([]) as Promise<[string, number][]>
+        async ([name, func]) => [name, await timed(func)] as [string, number]
     );
-    const results = await resultsPromise;
-    return fromPairs(results) as { [key: string]: number };
+    return fromPairs(results);
 };
 
 export const difference = (final: number, initial: number) =>
