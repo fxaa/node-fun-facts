@@ -14,18 +14,6 @@ const returnAsyncSleep = async (ms: number) => {
     return sleep(ms);
 };
 
-const basic = () => {
-    return Promise.resolve();
-};
-
-const returnAwaitBasic = async () => {
-    return await Promise.resolve();
-};
-
-const returnAsyncBasic = async () => {
-    return Promise.resolve();
-};
-
 const testSpeed = async () => {
     const durations = range(100).map(() => random(1, true));
 
@@ -36,11 +24,19 @@ const testSpeed = async () => {
     const returnAwaitBatch = () => Promise.all(durations.map(returnAwaitSleep));
     const returnAsyncBatch = () => Promise.all(durations.map(returnAsyncSleep));
     await runExperiment({
-        sampleCount: 100000,
+        sampleCount: 10,
         experiments: [
-            ["control", basic],
-            ["returnAwait", returnAwaitBasic],
-            ["returnAsync", returnAsyncBasic],
+            ["control", control],
+            ["returnAwait", returnAwait],
+            ["returnAsync", returnAsync],
+        ],
+    });
+    await runExperiment<void[]>({
+        sampleCount: 10,
+        experiments: [
+            ["control - n = 100", controlBatch],
+            ["returnAwait - n = 100", returnAwaitBatch],
+            ["returnAsync - n = 100", returnAsyncBatch],
         ],
     });
 };
