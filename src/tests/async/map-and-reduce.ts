@@ -56,7 +56,7 @@ const testSpeed = async () => {
     await runExperiment({
         sampleCount: 5,
         experiments: [
-            ["map", mapper],
+            ["control", mapper],
             ["reduce", reducer],
         ],
     });
